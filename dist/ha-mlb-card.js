@@ -45,24 +45,24 @@ class MLBCard extends LitElement {
 		if (Boolean(stateObj.state == 'STATUS_FINAL') && Number(hScr) > Number(aScr)) {
 			var awayTeamScoreOpacity = 0.6;
 			var homeTeamScoreOpacity = 1;
-			var homeTeamPitcherOfRecord = 'W: ' + stateObj.attributes.winning_pitcher
-			var homeTeamPitcherOfRecordStats = stateObj.attributes.winning_pitcher_wins + '-' + stateObj.attributes.winning_pitcher_losses + ' ERA: ' + stateObj.attributes.winning_pitcher_era
-			var awayTeamPitcherOfRecord = 'L: ' + stateObj.attributes.losing_pitcher
-			var awayTeamPitcherOfRecordStats = stateObj.attributes.losing_pitcher_wins + '-' + stateObj.attributes.losing_pitcher_losses + ' ERA: ' + stateObj.attributes.losing_pitcher_era
+			var homeTeamPitcherOfRecord = 'W: ' + stateObj.attributes.winning_pitcher;
+			var homeTeamPitcherOfRecordStats = stateObj.attributes.winning_pitcher_wins + '-' + stateObj.attributes.winning_pitcher_losses + ' ERA: ' + stateObj.attributes.winning_pitcher_era;
+			var awayTeamPitcherOfRecord = 'L: ' + stateObj.attributes.losing_pitcher;
+			var awayTeamPitcherOfRecordStats = stateObj.attributes.losing_pitcher_wins + '-' + stateObj.attributes.losing_pitcher_losses + ' ERA: ' + stateObj.attributes.losing_pitcher_era;
 		}
 		if (Boolean(stateObj.state == 'STATUS_FINAL') && Number(hScr) < Number(aScr)) {
 			var awayTeamScoreOpacity = 1;
 			var homeTeamScoreOpacity = 0.6;
-			var homeTeamPitcherOfRecord = 'L: ' + stateObj.attributes.losing_pitcher
-            var homeTeamPitcherOfRecordStats = stateObj.attributes.losing_pitcher_wins + '-' + stateObj.attributes.losing_pitcher_losses + ' ERA: ' + stateObj.attributes.losing_pitcher_era
-			var awayTeamPitcherOfRecord = 'W: ' + stateObj.attributes.winning_pitcher
-            var awayTeamPitcherOfRecordStats = stateObj.attributes.winning_pitcher_wins + '-' + stateObj.attributes.winning_pitcher_losses + ' ERA: ' + stateObj.attributes.winning_pitcher_era
+			var homeTeamPitcherOfRecord = 'L: ' + stateObj.attributes.losing_pitcher;
+            var homeTeamPitcherOfRecordStats = stateObj.attributes.losing_pitcher_wins + '-' + stateObj.attributes.losing_pitcher_losses + ' ERA: ' + stateObj.attributes.losing_pitcher_era;
+			var awayTeamPitcherOfRecord = 'W: ' + stateObj.attributes.winning_pitcher;
+            var awayTeamPitcherOfRecordStats = stateObj.attributes.winning_pitcher_wins + '-' + stateObj.attributes.winning_pitcher_losses + ' ERA: ' + stateObj.attributes.winning_pitcher_era;
 		}
 		if (Boolean(stateObj.state == 'STATUS_FINAL') && Number(hScr) == Number(aScr)) {
 			var awayTeamScoreOpacity = 1;
 			var homeTeamScoreOpacity = 1;
-			var homeTeamPitcherOfRecord = 'T: ' + stateObj.attributes.winning_pitcher
-			var awayTeamPitcherOfRecord = 'T: ' + stateObj.attributes.losing_pitcher
+			var homeTeamPitcherOfRecord = 'T: ' + stateObj.attributes.winning_pitcher;
+			var awayTeamPitcherOfRecord = 'T: ' + stateObj.attributes.losing_pitcher;
 		}
 		
 		if (stateObj.attributes.runner_on_1st == true) {
@@ -83,19 +83,28 @@ class MLBCard extends LitElement {
 		    var runnerThird = 0;
 		}
 		
-		const inn_desc = stateObj.attributes.inning_description;
-		if (inn_desc.slice(0, 3) == 'Top') {
-		    var awayTeamPossOpacity = 1;
-		    var homeTeamPossOpacity = 0;
+		if (stateObj.attributes.inning_description) {
+		    const inn_desc = stateObj.attributes.inning_description;
+		    if (inn_desc.slice(0, 3) == 'Top') {
+		        var awayTeamPossOpacity = 1;
+		        var homeTeamPossOpacity = 0;
+		    } else {
+		        var awayTeamPossOpacity = 0;
+		        var homeTeamPossOpacity = 1;
+		    }
 		} else {
-		    var awayTeamPossOpacity = 0;
+		    var awayTeamPossOpacity = 1;
 		    var homeTeamPossOpacity = 1;
 		}
 		
 		if (stateObj.attributes.venue_indoor == 'true') {
-		    var weatherDesc = 'Indoors'
+		    var weatherDesc = 'Indoors';
 		} else {
-		    var weatherDesc = stateObj.attributes.weather_conditions + ', ' + stateObj.attributes.weather_temp + '°F'
+		    if (stateObj.attributes.weather_conditions && stateObj.attributes.weather_temp) {
+		        var weatherDesc = stateObj.attributes.weather_conditions + ', ' + stateObj.attributes.weather_temp + '°F';
+		    } else {
+		        var weatherDesc = 'Weather: N/A';
+		    }
 		}
 		
     } else {
@@ -147,9 +156,8 @@ stateObj.state could be "STATUS_SCHEDULED", "STATUS_IN_PROGRESS", "STATUS_POSTPO
 			  .card-content { display: flex; justify-content: space-evenly; align-items: center; text-align: center; position: relative; z-index: 99; }
 			  .team { text-align: center; width: 35%;}
 			  .team img { height: 90px; }
-               .teamls { text-align: center; }
-                .teamls img { height: 15px; }
-
+			.teamls { text-align: center; }
+			.teamls img { height: 15px; }
 			  .score { font-size: 3em; text-align: center; }
 			  .hometeamscr { opacity: ${homeTeamScoreOpacity}; }
 			  .awayteamscr { opacity: ${awayTeamScoreOpacity}; }
@@ -157,10 +165,9 @@ stateObj.state could be "STATUS_SCHEDULED", "STATUS_IN_PROGRESS", "STATUS_POSTPO
 			  .name { font-size: 1.4em; margin-bottom: 4px; }
 			  .line { height: 1px; background-color: var(--primary-text-color); margin:10px 0; }
 			  .status { font-size: 1.2em; text-align: center; margin-top: -21px; }
-            .sub1, .sub2, .sub3, .sub4 { display: flex; justify-content: space-between; align-items: center; margin: 2px 0; }
-             .venue { text-align: left; }
-             .location { text-align: right; }
-
+			.sub1, .sub2, .sub3, .sub4 { display: flex; justify-content: space-between; align-items: center; margin: 2px 0; }
+			.venue { text-align: left; }
+			.location { text-align: right; }
              .line-score-table { width: 100%; border-collapse: collapse; text-align: center; }
              .line-score-cell { border: 0.5px solid #999; text-align: center; }
              table.ls { width: 100%; text-align: center; border: 0.5px solid #999; border-collapse: collapse; }
@@ -276,63 +283,58 @@ stateObj.state could be "STATUS_SCHEDULED", "STATUS_IN_PROGRESS", "STATUS_POSTPO
 				.kickoff { text-align: center; margin-top: -24px; }
 				.probability-text { text-align: center; }
 				.prob-flex { width: 100%; display: flex; justify-content: center; margin-top: 4px; }
-            .away-team-probability { width: ${awayTeamProb}%; background-color: ${awayTeamColor}; height: 12px; border-radius: 0 ${probRadius}px ${probRadius}px 0; border: ${clrOut}px solid ${outColor}; border-left: 0; transition: all 1s ease-out; }
-            .home-team-probability { width: ${homeTeamProb}%; background-color: ${homeTeamColor}; height: 12px; border-radius: ${probRadius}px 0 0 ${probRadius}px; border: ${clrOut}px solid ${outColor}; border-right: 0; transition: all 1s ease-out; }
-
-
-
+				.away-team-probability { width: ${awayTeamProb}%; background-color: ${awayTeamColor}; height: 12px; border-radius: 0 ${probRadius}px ${probRadius}px 0; border: ${clrOut}px solid ${outColor}; border-left: 0; transition: all 1s ease-out; }
+				.home-team-probability { width: ${homeTeamProb}%; background-color: ${homeTeamColor}; height: 12px; border-radius: ${probRadius}px 0 0 ${probRadius}px; border: ${clrOut}px solid ${outColor}; border-right: 0; transition: all 1s ease-out; }
 				.probability-wrapper { display: flex; }
 				.away-team-percent { flex: 0 0 10px; padding: 0 10px 0 0; }
 				.home-team-percent { flex: 0 0 10px; padding: 0 0 0 10px; text-align: right; }
 				.percent { padding: 0 6px; }
-
 			  </style>
 			  <ha-card>
 				  <div class="card">
-				  <img class="away-team-bg" src="${awayTeamLogo}" />
-				  <img class="home-team-bg" src="${homeTeamLogo}" />
-				  <div class="card-content">
-					<div class="team">
-					  <img src="${awayTeamLogo}" />
-					  <div class="name">${stateObj.attributes.away_team_city}<br>${stateObj.attributes.away_team_name}</div>
-					  <div class="record">${stateObj.attributes.away_team_record}</div>
-					  <div class="pitcher">${stateObj.attributes.away_team_starting_pitcher}</div>
-					</div>
-					<div class="gamewrapper">
-					  <div class="gameday">${gameDay}</div>
-					  <div class="gametime">${gameTime}</div>
-					</div>
-					<div class="team">
-					  <img src="${homeTeamLogo}" />
-					  <div class="name">${stateObj.attributes.home_team_city}<br>${stateObj.attributes.home_team_name}</div>
-					  <div class="record">${stateObj.attributes.home_team_record}</div>
-					  <div class="pitcher">${stateObj.attributes.home_team_starting_pitcher}</div>
-					</div>
+				    <img class="away-team-bg" src="${awayTeamLogo}" />
+				    <img class="home-team-bg" src="${homeTeamLogo}" />
+				    <div class="card-content">
+					  <div class="team">
+					    <img src="${awayTeamLogo}" />
+					    <div class="name">${stateObj.attributes.away_team_city}<br>${stateObj.attributes.away_team_name}</div>
+					    <div class="record">${stateObj.attributes.away_team_record}</div>
+					    <div class="pitcher">${stateObj.attributes.away_team_starting_pitcher}</div>
+					  </div>
+					  <div class="gamewrapper">
+					    <div class="gameday">${gameDay}</div>
+					    <div class="gametime">${gameTime}</div>
+					  </div>
+					  <div class="team">
+					    <img src="${homeTeamLogo}" />
+					    <div class="name">${stateObj.attributes.home_team_city}<br>${stateObj.attributes.home_team_name}</div>
+					    <div class="record">${stateObj.attributes.home_team_record}</div>
+					    <div class="pitcher">${stateObj.attributes.home_team_starting_pitcher}</div>
+					  </div>
+				    </div>
+				    <div class="line"></div>
+				    <div class="sub1">
+					  <div class="date">1st pitch ${stateObj.attributes.first_pitch_in}</div>
+					  <div class="odds">${stateObj.attributes.odds} [ O/U: ${stateObj.attributes.overunder} ]</div>
+				    </div>
+				    <div class="sub2">
+					  <div class="venue">${stateObj.attributes.venue_name}</div>
+					  <div class="overunder">${weatherDesc}</div>
+				    </div>
+				    <div class="sub3">
+					  <div class="location">${stateObj.attributes.venue_city}, ${stateObj.attributes.venue_state}</div>
+					  <div class="network">${stateObj.attributes.tv_network}</div>
+				    </div>
+				    <div class="probability-text">Win Probability</div>
+				    <div class="probability-wrapper">
+				      <div class="away-team-percent">${awayTeamProb}%</div>
+				      <div class="prob-flex">
+					    <div class="away-team-probability"></div>
+					    <div class="home-team-probability"></div>
+				      </div>
+				      <div class="home-team-percent">${homeTeamProb}%</div>
+				    </div>
 				  </div>
-				  <div class="line"></div>
-				  <div class="sub1">
-					<div class="date">1st pitch ${stateObj.attributes.first_pitch_in}</div>
-					<div class="odds">${stateObj.attributes.odds} [ O/U: ${stateObj.attributes.overunder} ]</div>
-				  </div>
-				  <div class="sub2">
-					<div class="venue">${stateObj.attributes.venue_name}</div>
-					<div class="overunder">${weatherDesc}</div>
-				  </div>
-				  <div class="sub3">
-					<div class="location">${stateObj.attributes.venue_city}, ${stateObj.attributes.venue_state}</div>
-					<div class="network">${stateObj.attributes.tv_network}</div>
-				  </div>
-				<div class="probability-text">Win Probability</div>
-				<div class="probability-wrapper">
-				  <div class="away-team-percent">${awayTeamProb}%</div>
-				  <div class="prob-flex">
-					<div class="away-team-probability"></div>
-					<div class="home-team-probability"></div>
-				  </div>
-				  <div class="home-team-percent">${homeTeamProb}%</div>
-				</div>
-
-				</div>
 				</ha-card>
 			`;
 
@@ -359,13 +361,12 @@ stateObj.state could be "STATUS_SCHEDULED", "STATUS_IN_PROGRESS", "STATUS_POSTPO
 				.kickoff { text-align: center; margin-top: -24px; }
 				.probability-text { text-align: center; }
 				.prob-flex { width: 100%; display: flex; justify-content: center; margin-top: 4px; }
-            .away-team-probability { width: ${awayTeamProb}%; background-color: ${awayTeamColor}; height: 12px; border-radius: 0 ${probRadius}px ${probRadius}px 0; border: ${clrOut}px solid ${outColor}; border-left: 0; transition: all 1s ease-out; }
-            .home-team-probability { width: ${homeTeamProb}%; background-color: ${homeTeamColor}; height: 12px; border-radius: ${probRadius}px 0 0 ${probRadius}px; border: ${clrOut}px solid ${outColor}; border-right: 0; transition: all 1s ease-out; }
-             .probability-wrapper { display: flex; }
+				.away-team-probability { width: ${awayTeamProb}%; background-color: ${awayTeamColor}; height: 12px; border-radius: 0 ${probRadius}px ${probRadius}px 0; border: ${clrOut}px solid ${outColor}; border-left: 0; transition: all 1s ease-out; }
+				.home-team-probability { width: ${homeTeamProb}%; background-color: ${homeTeamColor}; height: 12px; border-radius: ${probRadius}px 0 0 ${probRadius}px; border: ${clrOut}px solid ${outColor}; border-right: 0; transition: all 1s ease-out; }
+				.probability-wrapper { display: flex; }
 				.away-team-percent { flex: 0 0 10px; padding: 0 10px 0 0; }
 				.home-team-percent { flex: 0 0 10px; padding: 0 0 0 10px; text-align: right; }
 				.percent { padding: 0 6px; }
-
 			  </style>
 			  <ha-card>
 				  <div class="card">
@@ -392,12 +393,6 @@ stateObj.state could be "STATUS_SCHEDULED", "STATUS_IN_PROGRESS", "STATUS_POSTPO
 					</div>
 				  </div>
 				  <div class="line"></div>
-<!--
-				  <div class="sub1">
-					<div class="date">&nbsp;</div>
-					<div class="odds">&nbsp;</div>
-				  </div>
--->
 				  <div class="sub2">
 					<div class="venue">${stateObj.attributes.venue_name}</div>
 					<div class="overunder">${stateObj.attributes.venue_city}, ${stateObj.attributes.venue_state}</div>
@@ -405,19 +400,9 @@ stateObj.state could be "STATUS_SCHEDULED", "STATUS_IN_PROGRESS", "STATUS_POSTPO
                <div class="sub3">
                  <div class="location">${stateObj.attributes.headlines}</div>
                </div>
-<!--
-				  <div class="sub3">
-					<div class="location">${stateObj.attributes.venue_city}, ${stateObj.attributes.venue_state}</div>
-					<div class="network">&nbsp;</div>
-				  </div>
--->
-
-
 				</div>
 				</ha-card>
 			`;
-
-
 
 		} else if (stateObj.state == 'STATUS_IN_PROGRESS' || stateObj.state == 'STATUS_RAIN_DELAY') {
 			return html`
@@ -428,8 +413,8 @@ stateObj.state could be "STATUS_SCHEDULED", "STATUS_IN_PROGRESS", "STATUS_POSTPO
 				.card-content { display: flex; justify-content: space-evenly; align-items: center; text-align: center; position: relative; z-index: 99; }
 				.team { text-align: center; width:35%; }
 				.team img { height: 90px; }
-                .teamls { text-align: center; }
-                .teamls img { height: 15px; }
+				.teamls { text-align: center; }
+				.teamls img { height: 15px; }
 				.possession, .awayteamposs, .hometeamposs { font-size: 2.5em; text-align: center; opacity: 0; font-weight:900; }
 				.awayteamposs {opacity: ${awayTeamPossOpacity} !important; }
 				.hometeamposs {opacity: ${homeTeamPossOpacity} !important; }
@@ -437,7 +422,6 @@ stateObj.state could be "STATUS_SCHEDULED", "STATUS_IN_PROGRESS", "STATUS_POSTPO
 				.divider { font-size: 2.5em; text-align: center; margin: 0 4px; }
 				.name { font-size: 1.4em; margin-bottom: 4px; }
 				.line { height: 1px; background-color: var(--primary-text-color); margin:10px 0; }
-				
 				.bso-wrapper { display: flex;}
 				.bso-flex { width: 100%; display: flex; justify-content: space-evenly; align-items: center; text-align: center; margin-top: 4px; }
 				.bso-balls { margin: 0 auto; width: 33%; }
@@ -449,7 +433,6 @@ stateObj.state could be "STATUS_SCHEDULED", "STATUS_IN_PROGRESS", "STATUS_POSTPO
 				.balls { height: 12px; border-radius: 6px; border: ${clrOut}px solid ${outColor}; width: 10%; background-color: red; display: inline-block; margin: 0 auto; position: relative; opacity: 0.2; }
 				.strikes { height: 12px; border-radius: 6px; border: ${clrOut}px solid ${outColor}; width: 10%; background-color: red; display: inline-block; margin: 0 auto; position: relative; opacity: 0.2; }
 				.outs { height: 12px; border-radius: 6px; border: ${clrOut}px solid ${outColor}; width: 10%; background-color: red; display: inline-block; margin: 0 auto; position: relative; opacity: 0.2; }
-
 				.bases-wrapper { display: flex; }
 				.bases-flex { width: 100%; display: flex; justify-content: space-evenly; align-items: center; text-align: center; margin-top: 4px; }
 				.bases-first { margin: 0 auto; width: 33%; }
@@ -461,14 +444,11 @@ stateObj.state could be "STATUS_SCHEDULED", "STATUS_IN_PROGRESS", "STATUS_POSTPO
 				.first { height: 12px; border-radius: 6px; border: ${clrOut}px solid ${outColor}; width: 10%; background-color: #00ff00; display: inline-block; margin: 0 auto; position: relative; opacity: 0.2; }
 				.second { height: 12px; border-radius: 6px; border: ${clrOut}px solid ${outColor}; width: 10%; background-color: #00ff00; display: inline-block; margin: 0 auto; position: relative; opacity: 0.2; }
 				.third { height: 12px; border-radius: 6px; border: ${clrOut}px solid ${outColor}; width: 10%; background-color: #00ff00; display: inline-block; margin: 0 auto; position: relative; opacity: 0.2; }
-				
-				
-        .timeouts { margin: 0 auto; width: 70%; }
-        .timeouts div.away-team-to:nth-child(-n + ${stateObj.attributes.strikes})  { opacity: 1; }
-        .timeouts div.home-team-to:nth-child(-n + ${stateObj.attributes.outs})  { opacity: 1; }
-        .away-team-to { height: 6px; border-radius: ${toRadius}px; border: ${clrOut}px solid ${outColor}; width: 20%; background-color: ${awayTeamColor}; display: inline-block; margin: 0 auto; position: relative; opacity: 0.2; }
-        .home-team-to { height: 6px; border-radius: ${toRadius}px; border: ${clrOut}px solid ${outColor}; width: 20%; background-color: ${homeTeamColor}; display: inline-block; margin: 0 auto; position: relative; opacity: 0.2; }
-
+				.timeouts { margin: 0 auto; width: 70%; }
+				.timeouts div.away-team-to:nth-child(-n + ${stateObj.attributes.strikes})  { opacity: 1; }
+				.timeouts div.home-team-to:nth-child(-n + ${stateObj.attributes.outs})  { opacity: 1; }
+				.away-team-to { height: 6px; border-radius: ${toRadius}px; border: ${clrOut}px solid ${outColor}; width: 20%; background-color: ${awayTeamColor}; display: inline-block; margin: 0 auto; position: relative; opacity: 0.2; }
+				.home-team-to { height: 6px; border-radius: ${toRadius}px; border: ${clrOut}px solid ${outColor}; width: 20%; background-color: ${homeTeamColor}; display: inline-block; margin: 0 auto; position: relative; opacity: 0.2; }
 				.status { text-align:center; font-size:1.6em; font-weight: 700; }
 				.sub1 { font-weight: 700; font-size: 1.2em; margin: 6px 0 2px; }
 				.sub1, .sub2, .sub3, .sub4 { display: flex; justify-content: space-between; align-items: center; margin: 2px 0; }
@@ -491,29 +471,22 @@ stateObj.state could be "STATUS_SCHEDULED", "STATUS_IN_PROGRESS", "STATUS_POSTPO
 				.weather { text-align: right; }
 				.location { text-align: left; }
 				.network { text-align: right; }
-                .line-score-table { width: 100%; border-collapse: collapse; text-align: center; }
-                .line-score-cell { border: 0.5px solid #999; text-align: center; }
-                table.ls { width: 100%; text-align: center; border: 0.5px solid #999; border-collapse: collapse; }
-                th, td { border: 0.5px solid #999; text-align: center; }
-                th.teamls, td.teamls { border: 0.5px solid #999; text-align: left; }
+				.line-score-table { width: 100%; border-collapse: collapse; text-align: center; }
+				.line-score-cell { border: 0.5px solid #999; text-align: center; }
+				table.ls { width: 100%; text-align: center; border: 0.5px solid #999; border-collapse: collapse; }
+				th, td { border: 0.5px solid #999; text-align: center; }
+				th.teamls, td.teamls { border: 0.5px solid #999; text-align: left; }
              
 			  </style>
 			  <ha-card>
 				<div class="card">
 				<img class="away-team-bg" src="${awayTeamLogo}" />
-    			<img class="home-team-bg" src="${homeTeamLogo}" />
+    				<img class="home-team-bg" src="${homeTeamLogo}" />
 				<div class="card-content">
 				  <div class="team">
 					<img src="${awayTeamLogo}" />
 					<div class="name">${stateObj.attributes.away_team_city}<br>${stateObj.attributes.away_team_name}</div>
 					<div class="record">${stateObj.attributes.away_team_record}</div>
-					<!--
-					<div class="timeouts">
-					  <div class="away-team-to"></div>
-					  <div class="away-team-to"></div>
-					  <div class="away-team-to"></div>
-					</div>
-					-->
 				  </div>
 				  <div class="awayteamposs">&bull;</div>
 				  <div class="score">${aScr}</div>
@@ -524,13 +497,6 @@ stateObj.state could be "STATUS_SCHEDULED", "STATUS_IN_PROGRESS", "STATUS_POSTPO
 					<img src="${homeTeamLogo}" />
 					<div class="name">${stateObj.attributes.home_team_city}<br>${stateObj.attributes.home_team_name}</div>
 					<div class="record">${stateObj.attributes.home_team_record}</div>
-					<!--
-					<div class="timeouts">
-					  <div class="home-team-to"></div>
-					  <div class="home-team-to"></div>
-					  <div class="home-team-to"></div>
-					</div>
-					-->
 				  </div>
 				</div>
 				<div class="game-status">${stateObj.attributes.game_status}</div>
@@ -677,49 +643,6 @@ stateObj.state could be "STATUS_SCHEDULED", "STATUS_IN_PROGRESS", "STATUS_POSTPO
 		  `;
 		}
 	}
-
-/*
-			  <style>
-				.away-team-probability { width: ${awayTeamProb}%; background-color: ${oppoColor}; height: 12px; border-radius: 0 ${probRadius}px ${probRadius}px 0; border: ${clrOut}px solid ${outColor}; border-left: 0; transition: all 1s ease-out; }
-				.home-team-probability { width: ${homeTeamProb}%; background-color: ${teamColor}; height: 12px; border-radius: ${probRadius}px 0 0 ${probRadius}px; border: ${clrOut}px solid ${outColor}; border-right: 0; transition: all 1s ease-out; }
-			  </style>
-
-
-
-
-
-*/
-
-/*
-    if (stateObj.state == 'Scheduled') {
-      return html`
-        <style>
-          .card { position: relative; overflow: hidden; padding: 16px 16px 20px; font-weight: 400; }
-          .team-bg { opacity: 0.08; position: absolute; top: -20%; left: -30%; width: 75%; z-index: 0; }
-          .card-content { display: flex; justify-content: space-evenly; align-items: center; text-align: center; position: relative; z-index: 99; }
-          .team { text-align: center; width: 50%; }
-          .team img { max-width: 90px; }
-          .name { font-size: 1.6em; margin-bottom: 4px; }
-          .line { height: 1px; background-color: var(--primary-text-color); margin:10px 0; }
-          .bye { font-size: 1.8em; text-align: center; width: 50%; }
-        </style>
-        <ha-card>
-          <div class="card">
-            <img class="team-bg" src="${stateObj.attributes.team_logo}" />
-            <div class="card-content">
-              <div class="team">
-                <img src="${stateObj.attributes.team_logo}" />
-                <div class="name">${stateObj.attributes.team_name}</div>
-              </div>
-              <div class="bye">BYE</div>
-            </div>
-          </div>
-        </ha-card>
-      `;
-    }
-*/
-	
-
   }
 }
 
